@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,6 +12,7 @@ namespace CA2Year2Sem1
     /// </summary>
     public partial class MainWindow : Window
     {
+        //Creates a grey colour
         SolidColorBrush greyedOut = new SolidColorBrush(Color.FromRgb(0xa5, 0xa5, 0xa5));
 
         List<Employee> employees = new List<Employee>();
@@ -19,14 +21,18 @@ namespace CA2Year2Sem1
         {
             InitializeComponent();
 
-            FullTimeEmployee fullTime1 = new FullTimeEmployee("John", "Doe", 100);
-            FullTimeEmployee fullTime2 = new FullTimeEmployee("Jill", "Doe", 200);
+            //BruceBat WayneCave is a multi-millionare and makes da moola
+            FullTimeEmployee fullTime1 = new FullTimeEmployee("BruceBat", "WayneCave", 10000000);
+            //ClarkSuper ManKent is a journelist so dosen't make much money
+            FullTimeEmployee fullTime2 = new FullTimeEmployee("ClarkSuper", "ManKent", 500);
 
             employees.Add(fullTime1);
             employees.Add(fullTime2);
 
-            PartTimeEmployee partTime1 = new PartTimeEmployee("Jane", "Smith", 10, 20);
-            PartTimeEmployee partTime2 = new PartTimeEmployee("John", "Smith", 30, 40);
+            //WadeDead WillsonPool is a merc so makes a lot of money for a small amount of time
+            PartTimeEmployee partTime1 = new PartTimeEmployee("WadeDead", "WillsonPool", 20000, 5);
+            //GhostJohnny BlazeRider is an accountent so makes a small amount of money for a long amount of time
+            PartTimeEmployee partTime2 = new PartTimeEmployee("GhostJohnny", "BlazeRider", 10, 50);
 
             employees.Add(partTime1);
             employees.Add(partTime2);
@@ -37,38 +43,64 @@ namespace CA2Year2Sem1
         private void rdobtnFullTime_Checked(object sender, RoutedEventArgs e)
         {
             //Allows the user to enter the data specific to full time employees
+            //Changes font colour to black
             tblkSalary.Foreground = Brushes.Black;
+            //Changes the background to white
             tbxSalary.Background = Brushes.White;
+            //Prevent the user from entering in any data
             tbxSalary.IsEnabled = true;
+            //Changes the cursor to an IBeam
             tbxSalary.Cursor = Cursors.IBeam;
 
+
             //Prevents the user from entering data that dosn't apply to a full time employee
+            //Changes the font colour to grey
             tblkHourlyRate.Foreground = greyedOut;
+            //Changes the background colour to grey
             tbxHourlyRate.Background = greyedOut;
+            //Prevents the user from entering in any data
             tbxHourlyRate.IsEnabled = false;
+            //Changes the cursor to an arrow
             tbxHourlyRate.Cursor = Cursors.Arrow;
+            //Changes the font colour to grey
             tblkHoursWorked.Foreground = greyedOut;
+            //Changes the background to grey
             tbxHoursWorked.Background = greyedOut;
+            //Prevents the user from entering in any data
             tbxHoursWorked.IsEnabled = false;
+            //Changes the cursor to an arrow
             tbxHoursWorked.Cursor = Cursors.Arrow;
         }
 
         private void rdobtnPartTime_Checked(object sender, RoutedEventArgs e)
         {
             //Allows the user to enter the data specific to part time employees
+            //Changes font colour to black
             tblkHourlyRate.Foreground = Brushes.Black;
+            //Changes background colour to white
             tbxHourlyRate.Background = Brushes.White;
+            //Allows the user to enter in data
             tbxHourlyRate.IsEnabled = true;
+            //Changes the cursor to an IBeam
             tbxHourlyRate.Cursor = Cursors.IBeam;
+            //Changes font colour to black
             tblkHoursWorked.Foreground = Brushes.Black;
+            //Changes background colour to white
             tbxHoursWorked.Background = Brushes.White;
+            //Allows the user to enter in data
             tbxHoursWorked.IsEnabled = true;
+            //Changes the cursor to an IBeam
             tbxHoursWorked.Cursor = Cursors.IBeam;
 
+
             //Prevents the user from entering data that dosn't apply to a part time employee
+            //Changes the font colour to grey
             tblkSalary.Foreground = greyedOut;
+            //Changes the backgorund colour to grey
             tbxSalary.Background = greyedOut;
+            //Prevents the user from entering in text
             tbxSalary.IsEnabled = false;
+            //Changes the cursor to an arrow
             tbxSalary.Cursor = Cursors.Arrow;
         }
 
@@ -104,7 +136,7 @@ namespace CA2Year2Sem1
                             break;
                     }
                 }
-
+                
                 lstbxEmployees.ItemsSource = null;
                 lstbxEmployees.ItemsSource = partTimes;
             }
@@ -174,25 +206,21 @@ namespace CA2Year2Sem1
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (tbxSalary.Text == "" || tbxHourlyRate.Text == "" || tbxHoursWorked.Text == "")
+            employees.Remove((Employee)lstbxEmployees.SelectedItem);
+
+            if (rdobtnFullTime.IsChecked == true)
             {
-                MessageBox.Show("INVALID INPUT, VALUES MUST BE ENTERED");
+                FullTimeEmployee fullTime = new FullTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxSalary.Text));
+                employees.Add(fullTime);
             }
             else
             {
-                employees.Remove((Employee)lstbxEmployees.SelectedItem);
-
-                if (rdobtnFullTime.IsChecked == true)
-                {
-                    FullTimeEmployee fullTime = new FullTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxSalary.Text));
-                    employees.Add(fullTime);
-                }
-                else
-                {
-                    PartTimeEmployee partTime = new PartTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxHourlyRate.Text), double.Parse(tbxHoursWorked.Text));
-                    employees.Add(partTime);
-                }
+                PartTimeEmployee partTime = new PartTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxHourlyRate.Text), double.Parse(tbxHoursWorked.Text));
+                employees.Add(partTime);
             }
+
+            employees.Sort();
+            btnClear_Click(null, null);
 
             lstbxEmployees.ItemsSource = null;
             lstbxEmployees.ItemsSource = employees;
