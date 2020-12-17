@@ -15,28 +15,33 @@ namespace CA2Year2Sem1
         //Creates a grey colour
         SolidColorBrush greyedOut = new SolidColorBrush(Color.FromRgb(0xa5, 0xa5, 0xa5));
 
+        //Creates a list of type employee
         List<Employee> employees = new List<Employee>();
 
         public MainWindow()
         {
             InitializeComponent();
 
-            //BruceBat WayneCave is a multi-millionare and makes da moola
+            //Two fulltime employees
             FullTimeEmployee fullTime1 = new FullTimeEmployee("BruceBat", "WayneCave", 10000000);
-            //ClarkSuper ManKent is a journelist so dosen't make much money
             FullTimeEmployee fullTime2 = new FullTimeEmployee("ClarkSuper", "ManKent", 500);
 
+            //Adds the two employees
             employees.Add(fullTime1);
             employees.Add(fullTime2);
 
-            //WadeDead WillsonPool is a merc so makes a lot of money for a small amount of time
+            //Two parttime employees
             PartTimeEmployee partTime1 = new PartTimeEmployee("WadeDead", "WillsonPool", 20000, 5);
-            //GhostJohnny BlazeRider is an accountent so makes a small amount of money for a long amount of time
             PartTimeEmployee partTime2 = new PartTimeEmployee("GhostJohnny", "BlazeRider", 10, 50);
 
+            //Adds the two employees
             employees.Add(partTime1);
             employees.Add(partTime2);
 
+            employees.Sort();
+
+            //Adds the employee list to the list box
+            lstbxEmployees.ItemsSource = null;
             lstbxEmployees.ItemsSource = employees;
         }
 
@@ -107,41 +112,53 @@ namespace CA2Year2Sem1
        
         private void chbxFullTime_Click(object sender, RoutedEventArgs e)
         {
+            //Creates a list of type FullTimeEmployee
             List<FullTimeEmployee> fullTimes = new List<FullTimeEmployee>();
+            //Creates a list of type PartTimeEmployee
             List<PartTimeEmployee> partTimes = new List<PartTimeEmployee>();
 
+            //While full time checkbox is checked and the part time checkbox is not checked
             if (chbxFullTime.IsChecked == true && chbxPartTime.IsChecked == false)
             {
+                //Loops through all of the employees
                 for (int i = 0; i < employees.Count; i++)
                 {
+                    //checks if the employee selected is a full time employee
                     switch (employees[i] is FullTimeEmployee)
                     {
+                        //if the employee is a fulltime employee then the code will execute
                         case true:
                             fullTimes.Add((FullTimeEmployee)employees[i]);
                             break;
                     }
                 }
 
+                //removes all of the employees from the list and adds only the full time employees
                 lstbxEmployees.ItemsSource = null;
                 lstbxEmployees.ItemsSource = fullTimes;
             }
+            //while part time checkbox is checked and the full time checkbox is not checked
             else if (chbxPartTime.IsChecked == true && chbxFullTime.IsChecked == false)
             {
+                //Loops through all of the employees
                 for (int i = 0; i < employees.Count; i++)
                 {
+                    //checks if the employee selected is a part time employee
                     switch (employees[i] is PartTimeEmployee)
                     {
+                        //If the employee is a part time employee, the code is executed
                         case true:
                             partTimes.Add((PartTimeEmployee)employees[i]);
                             break;
                     }
                 }
-                
+                //Removes all of the employees from the list and adds only the part time employees
                 lstbxEmployees.ItemsSource = null;
                 lstbxEmployees.ItemsSource = partTimes;
             }
             else
             {
+                //In all other cases, all of the employees will be added to the list box
                 lstbxEmployees.ItemsSource = null;
                 lstbxEmployees.ItemsSource = employees;
             }
@@ -149,37 +166,57 @@ namespace CA2Year2Sem1
 
         private void lstbxEmployees_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //Creates a variable of type employee that contains the selected employee from the list box
             Employee selectedEmployee = lstbxEmployees.SelectedItem as Employee;
 
+            //if the selected employee has contents, the code will be executed
             if (selectedEmployee != null)
             {
+                //if the selected employee is a full time employee, the code is executed
                 if (selectedEmployee is FullTimeEmployee)
                 {
+                    //Creates a variable of type FullTimeEmployee that contains the selected employee casted to FullTimeEmployee
                     FullTimeEmployee fullTime = (FullTimeEmployee)selectedEmployee;
 
+                    //Adds the name of the employee to the first name text box
                     tbxFirstName.Text = fullTime.FirstName;
+                    //Adds the surname of the employee to the surname text box
                     tbxSurname.Text = fullTime.Surname;
+                    //Adds the salary of the employee to the salary text box
                     tbxSalary.Text = fullTime.Salary.ToString();
+                    //Adds the monthly pay of the employee to the monthly pay text block
                     tblkMonthlyPay.Text = fullTime.CalculateMonthlyPay().ToString();
+                    //Unchecks the full time radio button
                     rdobtnFullTime.IsChecked = true;
+                    //Checks the part time radio button
                     rdobtnPartTime.IsChecked = false;
 
+                    //Removes the text from the hourly rate and hours worked text boxes
                     tbxHourlyRate.Text = "";
                     tbxHoursWorked.Text = "";
                 }
-
+                //if the selected employee is a part time employee, the code is executed
                 else
                 {
+                    //creates a variable of type PartTimeEmployee that contains the selected employe casted to PartTimeEmployee
                     PartTimeEmployee partTime = (PartTimeEmployee)selectedEmployee;
 
+                    //Adds the name of the employee to the first name text box
                     tbxFirstName.Text = partTime.FirstName;
+                    //Adds the surname of the employee to the surname text box
                     tbxSurname.Text = partTime.Surname;
+                    //Adds the hourly rate of the employee to the hourly rate text box
                     tbxHourlyRate.Text = partTime.HourlyRate.ToString();
+                    //Adds the hours worked of the employee to the hours worked text box
                     tbxHoursWorked.Text = partTime.HoursWorked.ToString();
+                    //Adds the monthly pay of the employee to the monthly pay text block
                     tblkMonthlyPay.Text = partTime.CalculateMonthlyPay().ToString();
+                    //Unchecks the full time radio button
                     rdobtnFullTime.IsChecked = false;
+                    //Checks the part time radio button
                     rdobtnPartTime.IsChecked = true;
 
+                    //Removes the text from the hourly rate nd hours workedd text boxes
                     tbxSalary.Text = "";
                 }
             }
@@ -187,47 +224,64 @@ namespace CA2Year2Sem1
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            //If the full time radio button is checked, the code will execute
             if (rdobtnFullTime.IsChecked == true)
             {
+                //Adds a new employee of type full time employee and adds it to the employee list
                 FullTimeEmployee fullTime = new FullTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxSalary.Text));
                 employees.Add(fullTime);
             }
+            //If the part time radio button is checked, the code will execute
             else
             {
+                //Adds a new employee of type part time employee and adds it to the employee list
                 PartTimeEmployee partTime = new PartTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxHourlyRate.Text), double.Parse(tbxHoursWorked.Text));
                 employees.Add(partTime);
             }
 
+            //Sorts the employee list
             employees.Sort();
 
+            //Removes the employees from the list box and adds the employee list back to the 
             lstbxEmployees.ItemsSource = null;
             lstbxEmployees.ItemsSource = employees;
         }
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
+            //removes the selected employee from the employee list
             employees.Remove((Employee)lstbxEmployees.SelectedItem);
 
+            //If the full time radio button is checked, the code is executed
             if (rdobtnFullTime.IsChecked == true)
             {
+                //creates an employee of type FullTimeEmployee and adds it to the employee list
                 FullTimeEmployee fullTime = new FullTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxSalary.Text));
                 employees.Add(fullTime);
             }
+            //If the part time radio button is checked, the code is executed
             else
             {
+                //Creates an employee of type PartTimeEmployee and adds it to the employee list
                 PartTimeEmployee partTime = new PartTimeEmployee(tbxFirstName.Text, tbxSurname.Text, decimal.Parse(tbxHourlyRate.Text), double.Parse(tbxHoursWorked.Text));
                 employees.Add(partTime);
             }
 
+            //Sorts the employee list
             employees.Sort();
+
+            //Removes all the data from the text boxes 
             btnClear_Click(null, null);
 
+            //Removes all of the employees from the list box and adds the employee list back to it
             lstbxEmployees.ItemsSource = null;
             lstbxEmployees.ItemsSource = employees;
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
+            //Clears all of the data from the text boxes
+
             tbxFirstName.Clear();
             tbxSurname.Clear();
             tbxSalary.Clear();
@@ -240,10 +294,17 @@ namespace CA2Year2Sem1
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            employees.Remove((Employee)lstbxEmployees.SelectedItem);
+            //checks to see if the selected employee has content
+            if (lstbxEmployees.SelectedItem != null)
+            {
+                //removes the selected employee from the employee list
+                employees.Remove((Employee)lstbxEmployees.SelectedItem);
 
-            btnClear_Click(null, null);
+                //Clears all fo the data from the text boxes
+                btnClear_Click(null, null);
+            }
 
+            //Removes all of the employees form the list box and adds the employee list back to it
             lstbxEmployees.ItemsSource = null;
             lstbxEmployees.ItemsSource = employees;
         }
